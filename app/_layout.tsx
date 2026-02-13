@@ -2,7 +2,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Stack, router } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Platform, Linking } from "react-native";
+import { View, Text, StyleSheet, Platform, Linking, Pressable } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
@@ -67,12 +67,19 @@ function LoadingSplash() {
   );
 }
 
+const COPYRIGHT_URL = "https://www.filipeivopereira.com";
+
 function WebLayoutWrapper({ children }: { children: React.ReactNode }) {
   const { theme } = useTheme();
   if (Platform.OS !== "web") return <>{children}</>;
   return (
     <View style={[styles.flex, styles.webFullBg, { backgroundColor: theme.background }]}>
       <View style={[styles.flex, styles.webContentArea]}>{children}</View>
+      <Pressable style={styles.webFooter} onPress={() => Linking.openURL(COPYRIGHT_URL)}>
+        <Text style={[styles.webFooterText, { color: theme.textSecondary }]}>
+          © Filipe Ivo Pereira
+        </Text>
+      </Pressable>
     </View>
   );
 }
@@ -152,6 +159,15 @@ const styles = StyleSheet.create({
     width: "100%",
     alignSelf: "center",
     paddingHorizontal: 24,
+  },
+  webFooter: {
+    paddingVertical: 16,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  webFooterText: {
+    fontSize: 12,
+    textDecorationLine: "underline",
   },
   splash: {
     backgroundColor: SPLASH_BG,
