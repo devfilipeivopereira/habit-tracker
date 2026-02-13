@@ -9,7 +9,6 @@ import {
   Platform,
   ScrollView,
   ActivityIndicator,
-  Alert,
 } from "react-native";
 import { router } from "expo-router";
 import { useTheme } from "@/lib/useTheme";
@@ -43,6 +42,8 @@ export default function LoginScreen() {
     setLoading(false);
     if (err) {
       setError(err);
+    } else if (Platform.OS === "web" && typeof window !== "undefined") {
+      window.location.href = "/";
     } else {
       router.replace("/(tabs)");
     }
