@@ -18,6 +18,10 @@ import Colors from "@/constants/colors";
 SplashScreen.preventAutoHideAsync();
 
 const RESET_PASSWORD_SCHEME = "myapp://reset-password";
+const WEB_APP_BASE =
+  (typeof process !== "undefined" && process.env?.EXPO_PUBLIC_APP_URL) ||
+  "https://habitos.encorajar.com.br";
+const RESET_PASSWORD_WEB_PREFIX = `${WEB_APP_BASE}/reset-password`;
 
 function parseFragmentParams(fragment: string): Record<string, string> {
   const params: Record<string, string> = {};
@@ -29,8 +33,7 @@ function parseFragmentParams(fragment: string): Record<string, string> {
   return params;
 }
 
-function handleResetPasswordUrl(url: string): boolean {
-  if (!url.startsWith(RESET_PASSWORD_SCHEME) || !isSupabaseConfigured) return false;
+function extractTokensFromUrl(url: string): { access_token: string; refresh_token: string } | null {
   const hashIndex = url.indexOf("#");
   const queryIndex = url.indexOf("?");
   const hasFragment = hashIndex !== -1;
@@ -42,11 +45,31 @@ function handleResetPasswordUrl(url: string): boolean {
       : {};
   const access_token = params.access_token;
   const refresh_token = params.refresh_token;
-  if (!access_token || !refresh_token) return false;
-  supabase.auth.setSession({ access_token, refresh_token }).then(() => {
+  if (!access_token || !refresh_token) return null;
+  return { access_token, refresh_token };
+}
+
+function handleResetPasswordUrl(url: string): boolean {
+  if (!url || !isSupabaseConfigured) return false;
+
+  const isMyAppScheme = url.startsWith(RESET_PASSWORD_SCHEME);
+  const isWebLink =
+    url.startsWith(RESET_PASSWORD_WEB_PREFIX) || url.startsWith(WEB_APP_BASE + "/reset-password");
+  if (!isMyAppScheme && !isWebLink) return false;
+
+  const tokens = extractTokensFromUrl(url);
+  if (tokens) {
+    supabase.auth.setSession(tokens).then(() => {
+      router.replace("/(auth)/reset-password" as import("expo-router").Href);
+    });
+    return true;
+  }
+  // Link sem tokens (ex.: Android truncou o fragment): abre a tela de reset para usar o código
+  if (isWebLink || isMyAppScheme) {
     router.replace("/(auth)/reset-password" as import("expo-router").Href);
-  });
-  return true;
+    return true;
+  }
+  return false;
 }
 
 function DeepLinkHandler() {
