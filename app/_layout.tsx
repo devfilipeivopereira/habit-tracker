@@ -21,7 +21,8 @@ const RESET_PASSWORD_SCHEME = "myapp://reset-password";
 
 function parseFragmentParams(fragment: string): Record<string, string> {
   const params: Record<string, string> = {};
-  fragment.split("&").forEach((pair) => {
+  if (!fragment) return params;
+  fragment.replace(/^#?\?/, "").split("&").forEach((pair) => {
     const [key, value] = pair.split("=");
     if (key && value) params[decodeURIComponent(key)] = decodeURIComponent(value);
   });
@@ -31,8 +32,14 @@ function parseFragmentParams(fragment: string): Record<string, string> {
 function handleResetPasswordUrl(url: string): boolean {
   if (!url.startsWith(RESET_PASSWORD_SCHEME) || !isSupabaseConfigured) return false;
   const hashIndex = url.indexOf("#");
-  if (hashIndex === -1) return false;
-  const params = parseFragmentParams(url.slice(hashIndex + 1));
+  const queryIndex = url.indexOf("?");
+  const hasFragment = hashIndex !== -1;
+  const hasQuery = queryIndex !== -1;
+  const params = hasFragment
+    ? parseFragmentParams(url.slice(hashIndex + 1))
+    : hasQuery
+      ? parseFragmentParams(url.slice(queryIndex + 1))
+      : {};
   const access_token = params.access_token;
   const refresh_token = params.refresh_token;
   if (!access_token || !refresh_token) return false;

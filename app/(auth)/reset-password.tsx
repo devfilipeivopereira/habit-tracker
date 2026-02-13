@@ -62,6 +62,13 @@ export default function ResetPasswordScreen() {
     const access_token = hashParams.access_token;
     const refresh_token = hashParams.refresh_token;
     if (access_token && refresh_token) {
+      const ua = typeof navigator !== "undefined" ? navigator.userAgent : "";
+      const isMobileAppBrowser = /Android|iPhone|iPad|iPod/i.test(ua);
+      if (isMobileAppBrowser) {
+        const appUrl = `myapp://reset-password?access_token=${encodeURIComponent(access_token)}&refresh_token=${encodeURIComponent(refresh_token)}`;
+        window.location.href = appUrl;
+        return;
+      }
       supabase.auth.setSession({ access_token, refresh_token }).then(() => {
         if (typeof window !== "undefined" && window.history.replaceState) {
           window.history.replaceState(null, "", window.location.pathname);

@@ -68,11 +68,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const resetPasswordForEmail = useCallback(async (email: string) => {
     if (!isSupabaseConfigured) return { error: "Supabase não configurado." };
+    const webResetUrl =
+      typeof window !== "undefined"
+        ? `${window.location.origin}/reset-password`
+        : (process.env.EXPO_PUBLIC_APP_URL || "https://habitos.encorajar.com.br") + "/reset-password";
     const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-      redirectTo:
-        typeof window !== "undefined"
-          ? `${window.location.origin}/reset-password`
-          : "myapp://reset-password",
+      redirectTo: webResetUrl,
     });
     return { error: error?.message ?? null };
   }, []);
