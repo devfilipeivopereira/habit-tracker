@@ -63,7 +63,22 @@ Ela adiciona `user_id` em `habits`, remove as políticas “allow all” e cria 
 
 ---
 
-## 3. Testar a conexão
+## 3. Recuperação de senha
+
+O fluxo "Esqueci a senha" usa o Supabase Auth:
+
+1. Na tela de login, o utilizador clica em **Esqueci a senha** e informa o e-mail.
+2. O Supabase envia um e-mail com um link (redirect para `myapp://reset-password` na app ou para o site na web).
+3. Ao abrir o link, a app define a sessão a partir dos tokens na URL e mostra a tela **Nova senha**.
+4. O utilizador define e confirma a nova senha; em seguida é redirecionado para a área logada.
+
+**Supabase cloud:** em **Authentication → URL Configuration** adicione `myapp://reset-password` (e o domínio da web, se aplicável) em **Redirect URLs**.
+
+**Supabase self-hosted (Docker):** as redirect URLs configuram-se por variáveis de ambiente no serviço `auth` (GoTrue). Ver [Supabase self-hosted — Auth e recuperação de senha](supabase-selfhosted-auth-config.md).
+
+---
+
+## 4. Testar a conexão
 
 ```bash
 node scripts/test-supabase.js
@@ -79,7 +94,7 @@ Se tudo estiver correto, verá: `Supabase: todos os testes passaram.`
 
 ---
 
-## 4. Supabase auto-hospedado (Docker Swarm)
+## 5. Supabase auto-hospedado (Docker Swarm)
 
 Se o Supabase estiver em Docker Swarm na VPS:
 
@@ -91,6 +106,6 @@ Depois de criar ou alterar tabelas, reiniciar o `rest` evita erros do tipo “ta
 
 ---
 
-## 5. MCP (opcional)
+## 6. MCP (opcional)
 
 Com o MCP do Supabase configurado no Cursor (ex.: `https://supabase.seudominio.com/mcp`), pode executar SQL e inspecionar tabelas a partir do IDE.

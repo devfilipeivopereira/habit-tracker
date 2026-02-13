@@ -16,6 +16,7 @@ App de rastreamento de hábitos para iOS, Android e Web. Desenvolvido com **Expo
 - **Criar/editar hábitos** — Nome, cor, ícone, frequência (diário, dias úteis, fins de semana, personalizado)
 - **Detalhe do hábito** — Streak, taxas de conclusão (7/30/365 dias), histórico
 - **Tema** — Modo claro e escuro
+- **Recuperação de senha** — "Esqueci a senha" no login → e-mail com link → definir nova senha (app ou web)
 - **Sync** — Supabase (opcional); sem config, usa apenas AsyncStorage local
 
 ---
@@ -109,6 +110,7 @@ npx expo start
 ```
 habit-tracker/
 ├── app/                 # Rotas (expo-router)
+│   ├── (auth)/          # Login, cadastro, esqueci a senha, nova senha
 │   ├── (tabs)/          # Hoje, Calendário, Progresso
 │   ├── habit-form.tsx    # Criar/editar hábito
 │   └── habit-detail.tsx  # Detalhe e estatísticas
@@ -132,6 +134,7 @@ habit-tracker/
 ## Documentação
 
 - [Supabase — configuração e migração](docs/SUPABASE.md)
+- [Supabase self-hosted — Auth e recuperação de senha](docs/supabase-selfhosted-auth-config.md)
 - [Guia de desenvolvimento](docs/DESENVOLVIMENTO.md)
 - [Gerar APK (Android)](docs/BUILD-APK.md)
 - [Deploy Web na Vercel](docs/DEPLOY-VERCEL.md)

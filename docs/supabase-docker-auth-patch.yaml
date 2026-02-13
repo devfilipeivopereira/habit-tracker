@@ -1,0 +1,13 @@
+# Alterações no serviço supabase_auth para recuperação de senha
+# Copia apenas estas linhas para o teu YAML (substitui as atuais)
+
+# Troca isto:
+#   - GOTRUE_SITE_URL=https://supabase.filipeivopereira.com
+#   - GOTRUE_URI_ALLOW_LIST=
+#
+# Por isto:
+
+    ## 🔗 Configurações de URL e Permissões
+      - GOTRUE_SITE_URL=https://habitos.encorajar.com.br
+      - GOTRUE_URI_ALLOW_LIST=https://habitos.encorajar.com.br,https://habitos.encorajar.com.br/**,myapp://reset-password
+      - GOTRUE_DISABLE_SIGNUP=false

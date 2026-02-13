@@ -1,8 +1,8 @@
 import { QueryClientProvider } from "@tanstack/react-query";
-import { Stack } from "expo-router";
+import { Stack, router } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Platform } from "react-native";
+import { View, Text, StyleSheet, Platform, Linking } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
@@ -12,8 +12,47 @@ import { ThemeProvider } from "@/lib/ThemeContext";
 import { useTheme } from "@/lib/useTheme";
 import { AuthProvider } from "@/lib/AuthContext";
 import { WEB_CONTENT_MAX_WIDTH } from "@/lib/useResponsiveWeb";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 
 SplashScreen.preventAutoHideAsync();
+
+const RESET_PASSWORD_SCHEME = "myapp://reset-password";
+
+function parseFragmentParams(fragment: string): Record<string, string> {
+  const params: Record<string, string> = {};
+  fragment.split("&").forEach((pair) => {
+    const [key, value] = pair.split("=");
+    if (key && value) params[decodeURIComponent(key)] = decodeURIComponent(value);
+  });
+  return params;
+}
+
+function handleResetPasswordUrl(url: string): boolean {
+  if (!url.startsWith(RESET_PASSWORD_SCHEME) || !isSupabaseConfigured) return false;
+  const hashIndex = url.indexOf("#");
+  if (hashIndex === -1) return false;
+  const params = parseFragmentParams(url.slice(hashIndex + 1));
+  const access_token = params.access_token;
+  const refresh_token = params.refresh_token;
+  if (!access_token || !refresh_token) return false;
+  supabase.auth.setSession({ access_token, refresh_token }).then(() => {
+    router.replace("/(auth)/reset-password" as import("expo-router").Href);
+  });
+  return true;
+}
+
+function DeepLinkHandler() {
+  useEffect(() => {
+    Linking.getInitialURL().then((url) => {
+      if (url) handleResetPasswordUrl(url);
+    });
+    const sub = Linking.addEventListener("url", ({ url }) => {
+      handleResetPasswordUrl(url);
+    });
+    return () => sub.remove();
+  }, []);
+  return null;
+}
 
 const SPLASH_BG = "#120b2d";
 
@@ -84,11 +123,14 @@ export default function RootLayout() {
                     <LoadingSplash />
                   </View>
                 ) : (
-                  <WebLayoutWrapper>
-                    <HabitsProvider>
-                      <RootLayoutNav />
-                    </HabitsProvider>
-                  </WebLayoutWrapper>
+                  <>
+                    <DeepLinkHandler />
+                    <WebLayoutWrapper>
+                      <HabitsProvider>
+                        <RootLayoutNav />
+                      </HabitsProvider>
+                    </WebLayoutWrapper>
+                  </>
                 )}
               </KeyboardProvider>
             </GestureHandlerRootView>
