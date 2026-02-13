@@ -55,6 +55,9 @@ export default function ResetPasswordScreen() {
     return () => subscription.unsubscribe();
   }, []);
 
+  // No mobile browser, NÃO redirecionamos para o app: no Android o deep link
+  // muitas vezes não recebe os query params (tokens), e o usuário cai no login.
+  // Tratamos o fluxo todo na web: setSession + formulário "Nova senha" no browser.
   useEffect(() => {
     if (Platform.OS !== "web" || !isSupabaseConfigured || hashHandled) return;
     const hash = typeof window !== "undefined" ? window.location.hash : "";
@@ -62,13 +65,6 @@ export default function ResetPasswordScreen() {
     const access_token = hashParams.access_token;
     const refresh_token = hashParams.refresh_token;
     if (access_token && refresh_token) {
-      const ua = typeof navigator !== "undefined" ? navigator.userAgent : "";
-      const isMobileAppBrowser = /Android|iPhone|iPad|iPod/i.test(ua);
-      if (isMobileAppBrowser) {
-        const appUrl = `myapp://reset-password?access_token=${encodeURIComponent(access_token)}&refresh_token=${encodeURIComponent(refresh_token)}`;
-        window.location.href = appUrl;
-        return;
-      }
       supabase.auth.setSession({ access_token, refresh_token }).then(() => {
         if (typeof window !== "undefined" && window.history.replaceState) {
           window.history.replaceState(null, "", window.location.pathname);
@@ -159,9 +155,14 @@ export default function ResetPasswordScreen() {
             <Text style={[styles.title, { color: theme.text, fontFamily: "Nunito_700Bold" }]}>
               Senha redefinida
             </Text>
-            <Text style={[styles.subtitle, { color: theme.textSecondary, fontFamily: "Nunito_400Regular", marginBottom: 24 }]}>
+            <Text style={[styles.subtitle, { color: theme.textSecondary, fontFamily: "Nunito_400Regular", marginBottom: Platform.OS === "web" && typeof navigator !== "undefined" && /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ? 8 : 24 }]}>
               Sua senha foi alterada com sucesso. Faça login com sua nova senha.
             </Text>
+            {Platform.OS === "web" && typeof navigator !== "undefined" && /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ? (
+              <Text style={[styles.subtitle, { color: theme.textSecondary, fontFamily: "Nunito_400Regular", marginBottom: 24 }]}>
+                Pode fechar esta página e abrir o aplicativo HabitFlow para entrar.
+              </Text>
+            ) : null}
             <Pressable
               onPress={() => router.replace("/(auth)")}
               style={[styles.button, { backgroundColor: palette.teal }]}
