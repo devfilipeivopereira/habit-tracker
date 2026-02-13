@@ -16,6 +16,8 @@ Neste repositório existe um **kong.yml completo** já com CORS e a rota aberta 
 
 **Ficheiro no projeto:** `docs/kong.yml-full-with-cors`
 
+O ficheiro inclui origens de desenvolvimento (`http://localhost:8081`, `http://localhost:3000`) para testar auth e recuperação de senha em localhost.
+
 ---
 
 ## Passos no servidor

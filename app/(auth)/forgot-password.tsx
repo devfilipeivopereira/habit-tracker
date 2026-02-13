@@ -114,14 +114,24 @@ export default function ForgotPasswordScreen() {
         )}
 
         {sent && (
-          <Pressable
-            onPress={() => router.replace("/(auth)")}
-            style={[styles.button, styles.buttonSecondary, { borderColor: palette.teal }]}
-          >
-            <Text style={[styles.buttonTextSecondary, { color: palette.teal, fontFamily: "Nunito_600SemiBold" }]}>
-              Voltar ao login
-            </Text>
-          </Pressable>
+          <>
+            <Pressable
+              onPress={() => router.push({ pathname: "/(auth)/reset-password", params: { email: email.trim() } })}
+              style={[styles.linkButton]}
+            >
+              <Text style={[styles.linkText, { color: palette.teal, fontFamily: "Nunito_600SemiBold" }]}>
+                Já tenho o código do e-mail
+              </Text>
+            </Pressable>
+            <Pressable
+              onPress={() => router.replace("/(auth)")}
+              style={[styles.button, styles.buttonSecondary, { borderColor: palette.teal }]}
+            >
+              <Text style={[styles.buttonTextSecondary, { color: palette.teal, fontFamily: "Nunito_600SemiBold" }]}>
+                Voltar ao login
+              </Text>
+            </Pressable>
+          </>
         )}
       </ScrollView>
     </KeyboardAvoidingView>
@@ -160,6 +170,12 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     marginTop: 16,
   },
+  linkButton: {
+    paddingVertical: 12,
+    alignItems: "center",
+    marginTop: 8,
+  },
+  linkText: { fontSize: 16 },
   buttonText: { color: "#fff", fontSize: 16 },
   buttonTextSecondary: { fontSize: 16 },
 });

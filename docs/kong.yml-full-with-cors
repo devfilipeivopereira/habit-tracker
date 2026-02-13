@@ -47,6 +47,8 @@ services:
         config:
           origins:
             - https://habitos.encorajar.com.br
+            - http://localhost:8081
+            - http://localhost:3000
           credentials: true
           methods:
             - GET
@@ -74,6 +76,8 @@ services:
         config:
           origins:
             - https://habitos.encorajar.com.br
+            - http://localhost:8081
+            - http://localhost:3000
           credentials: true
           methods:
             - GET
@@ -101,6 +105,8 @@ services:
         config:
           origins:
             - https://habitos.encorajar.com.br
+            - http://localhost:8081
+            - http://localhost:3000
           credentials: true
           methods:
             - GET
@@ -130,6 +136,8 @@ services:
         config:
           origins:
             - https://habitos.encorajar.com.br
+            - http://localhost:8081
+            - http://localhost:3000
           credentials: true
           methods:
             - GET
@@ -160,6 +168,8 @@ services:
         config:
           origins:
             - https://habitos.encorajar.com.br
+            - http://localhost:8081
+            - http://localhost:3000
           credentials: true
           methods:
             - GET
@@ -199,6 +209,8 @@ services:
         config:
           origins:
             - https://habitos.encorajar.com.br
+            - http://localhost:8081
+            - http://localhost:3000
           credentials: true
           methods:
             - GET
@@ -238,6 +250,8 @@ services:
         config:
           origins:
             - https://habitos.encorajar.com.br
+            - http://localhost:8081
+            - http://localhost:3000
           credentials: true
           methods:
             - GET
@@ -283,6 +297,8 @@ services:
         config:
           origins:
             - https://habitos.encorajar.com.br
+            - http://localhost:8081
+            - http://localhost:3000
           credentials: true
           methods:
             - GET
@@ -321,6 +337,8 @@ services:
         config:
           origins:
             - https://habitos.encorajar.com.br
+            - http://localhost:8081
+            - http://localhost:3000
           credentials: true
           methods:
             - GET
@@ -360,6 +378,8 @@ services:
         config:
           origins:
             - https://habitos.encorajar.com.br
+            - http://localhost:8081
+            - http://localhost:3000
           credentials: true
           methods:
             - GET
@@ -390,6 +410,8 @@ services:
         config:
           origins:
             - https://habitos.encorajar.com.br
+            - http://localhost:8081
+            - http://localhost:3000
           credentials: true
           methods:
             - GET
@@ -479,6 +501,8 @@ services:
         config:
           origins:
             - https://habitos.encorajar.com.br
+            - http://localhost:8081
+            - http://localhost:3000
           credentials: true
           methods:
             - GET
