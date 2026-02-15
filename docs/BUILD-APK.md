@@ -33,7 +33,15 @@ eas build --platform android --profile preview
 
 O build corre nos servidores da Expo. No final aparece um link para **descarregar o APK**. Instale no telemóvel ou partilhe o ficheiro.
 
-### 4. Variáveis de ambiente (Supabase)
+### 4. Build em CI/CD (sem login interativo)
+
+Para builds automatizados, use um **Access Token** do Expo:
+
+1. Em [expo.dev](https://expo.dev) → **Account Settings** → **Access Tokens**, crie um token.
+2. Defina a variável de ambiente: `EXPO_TOKEN=seu_token`
+3. Execute: `npm run build:apk` ou `eas build --platform android --profile preview`
+
+### 5. Variáveis de ambiente (Supabase)
 
 Para o APK usar o seu Supabase, as variáveis `EXPO_PUBLIC_SUPABASE_URL` e `EXPO_PUBLIC_SUPABASE_ANON_KEY` precisam estar definidas no build. No EAS:
 
@@ -62,10 +70,20 @@ Gera o APK no seu computador. Precisa do **Android Studio** e do **Android SDK**
 ### 1. Gerar a pasta nativa `android/`
 
 ```bash
+npm run prebuild:android
+# ou
 npx expo prebuild --platform android
 ```
 
 Isso cria a pasta `android/` com o projeto nativo.
+
+**Alternativa via script (com `ANDROID_HOME` definido):**
+
+```bash
+npm run build:apk:local
+```
+
+O APK fica em `android/app/build/outputs/apk/release/app-release-unsigned.apk`.
 
 ### 2. Abrir no Android Studio
 
